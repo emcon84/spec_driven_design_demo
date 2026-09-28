@@ -1,0 +1,21 @@
+{
+  "project": "mi-proyecto",
+  "specsDir": "specs",
+  "templatesDir": "templates",
+  "progressDir": "progress",
+  "tests": {
+    "dirs": ["tests"],
+    "extensions": [".js", ".mjs", ".ts", ".tsx", ".py", ".go", ".dart", ".java", ".kt", ".rb"]
+  },
+  "verify": [],
+  "requiredFiles": [
+    "AGENTS.md",
+    "CHECKPOINTS.md",
+    "harness.config.json",
+    "progress/current.md",
+    "progress/history.md",
+    "docs/proyecto/arquitectura.md",
+    "docs/proyecto/convenciones.md",
+    "docs/proyecto/verificacion.md"
+  ]
+}
