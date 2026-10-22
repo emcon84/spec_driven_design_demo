@@ -1,7 +1,7 @@
 {
   "name": "spec-driven-harness",
   "version": "1.0.0",
-  "description": "Framework de Spec-Driven Design: specs con ciclo de vida, compuertas verificables y roles para agentes de IA.",
+  "description": "Spec-Driven Design framework: specs with a lifecycle, verifiable gates, and roles for AI agents.",
   "type": "module",
   "private": true,
   "engines": {

@@ -17,7 +17,7 @@ export const acNumber = (ac) => Number(ac.split('-')[1]);
 
 export function loadConfig(root) {
   const path = join(root, 'harness.config.json');
-  if (!existsSync(path)) throw new Error('falta harness.config.json en la raíz del proyecto');
+  if (!existsSync(path)) throw new Error('missing harness.config.json at the project root');
   return JSON.parse(readFileSync(path, 'utf8'));
 }
 
@@ -69,7 +69,7 @@ function loadSpec(specsDir, name) {
     status: data?.status || null,
     approvedBy: data?.approved_by || null,
     acs: [...body.matchAll(AC_DEFINITION)].map((m) => m[1]),
-    openQuestions: [...section(body, 'Preguntas abiertas').matchAll(OPEN_QUESTION)].map((m) => m[0].trim()),
+    openQuestions: [...section(body, 'Open questions').matchAll(OPEN_QUESTION)].map((m) => m[0].trim()),
     hasPlan: existsSync(join(dir, 'plan.md')),
     tasks: tasksText ? [...tasksText.matchAll(TASK_LINE)].map((m) => ({ id: m[2], done: m[1] !== ' ' })) : [],
     tasksAcMentions: new Set(tasksText?.match(AC_MENTION) ?? []),

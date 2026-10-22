@@ -1,10 +1,10 @@
-# Tareas — Spec {{id}}: {{title}}
+# Tasks — Spec {{id}}: {{title}}
 
-Cada tarea es chica, revisable por separado y nombra los AC que cubre
-(todo AC de la spec tiene que aparecer en al menos una tarea).
-Cada una empieza escribiendo sus tests (con `[AC-n]` en el nombre) y viéndolos fallar.
+Each task is small, reviewable on its own, and names the ACs it covers
+(every AC in the spec must appear in at least one task).
+Each one starts by writing its tests (with `[AC-n]` in the name) and watching them fail.
 
-- [ ] **T1 — <título>** (AC-…)
-  - Qué se hace.
+- [ ] **T1 — <title>** (AC-…)
+  - What is done.
   - Tests: `tests/…`.
-- [ ] **T2 — <título>** (AC-…)
+- [ ] **T2 — <title>** (AC-…)

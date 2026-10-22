@@ -1,75 +1,75 @@
 # Spec-Driven Design — framework + harness
 
-Un framework chico para llevar **una idea → una spec → código verificado**,
-pensado para trabajar con agentes de IA sin que se salteen pasos:
+A small framework to take **an idea → a spec → verified code**,
+built for working with AI agents without skipping steps:
 
-- **Specs como unidad de trabajo**, con un ciclo de vida (`idea → draft → approved → planned → in_progress → review → done`) y compuertas que un programa verifica.
-- **Un harness genérico** (`harness/`, sin dependencias) que sirve para cualquier stack. Se configura en `harness.config.json`.
-- **Roles de agentes** (leader, spec-writer, planner, implementer, reviewer) que dejan todo en `progress/`.
-- **Hooks de Cursor** que exigen aprobación humana y verifican el estado al cerrar.
+- **Specs as the unit of work**, with a lifecycle (`idea → draft → approved → planned → in_progress → review → done`) and gates a program verifies.
+- **A generic harness** (`harness/`, no dependencies) that works with any stack. Configure it in `harness.config.json`.
+- **Agent roles** (leader, spec-writer, planner, implementer, reviewer) that leave everything in `progress/`.
+- **Cursor hooks** that require human approval and verify state on close.
 
-## Empezar
+## Get started
 
-Requiere Node.js 20 o superior. No hay dependencias que instalar.
+Requires Node.js 20 or later. There are no dependencies to install.
 
-1. Completá `docs/proyecto/arquitectura.md`, `convenciones.md` y `verificacion.md`.
-2. En `harness.config.json`, configurá dónde están tus tests (`tests.dirs`) y tus comandos de verificación (`verify`).
-3. Verificá que todo esté en verde:
+1. Fill in `docs/project/architecture.md`, `conventions.md`, and `verification.md`.
+2. In `harness.config.json`, configure where your tests live (`tests.dirs`) and your verification commands (`verify`).
+3. Confirm everything is green:
 
    ```bash
    npm run harness -- check
    ```
 
-## Desplegar una idea
+## Start from an idea
 
 ```bash
-npm run harness -- new "Quiero que los usuarios puedan recuperar su contraseña por email" --title "Recuperar contraseña"
+npm run harness -- new "I want users to be able to reset their password by email" --title "Reset password"
 ```
 
-Después, en Cursor, pedile al agente: **«seguí AGENTS.md y avanzá la spec 001»**.
-El agente toma el rol que corresponde, te devuelve la spec con preguntas abiertas
-y se detiene hasta que vos la apruebes:
+Then, in Cursor, ask the agent: **"follow AGENTS.md and advance spec 001"**.
+The agent takes the matching role, returns the spec with open questions,
+and stops until you approve it:
 
 ```bash
-npm run harness -- move 001 approved --by <tu-nombre>
+npm run harness -- move 001 approved --by <your-name>
 ```
 
-## Comandos
+## Commands
 
-| Comando | Qué hace |
-|---------|----------|
-| `npm run harness -- new "<idea>" --title "..."` | Crea `specs/NNN-slug/spec.md` en estado `idea` |
-| `npm run harness -- status` | Estado de cada spec y el siguiente paso |
-| `npm run harness -- next-ac` | Próximo ID de criterio libre |
-| `npm run harness -- plan <id>` | Crea `plan.md` y `tasks.md` desde las plantillas |
-| `npm run harness -- move <id> <estado>` | Cambia de estado si pasa la compuerta |
-| `npm run harness -- check` | Verificación completa (al empezar y al cerrar) |
-| `npm run harness -- trace` | Solo trazabilidad entre criterios y tests |
+| Command | What it does |
+|---------|--------------|
+| `npm run harness -- new "<idea>" --title "..."` | Creates `specs/NNN-slug/spec.md` in `idea` status |
+| `npm run harness -- status` | Status of each spec and the next step |
+| `npm run harness -- next-ac` | Next free criterion ID |
+| `npm run harness -- plan <id>` | Creates `plan.md` and `tasks.md` from the templates |
+| `npm run harness -- move <id> <status>` | Changes status if the gate passes |
+| `npm run harness -- check` | Full verification (at start and close) |
+| `npm run harness -- trace` | Traceability between criteria and tests only |
 
-## Guía
+## Guide
 
-1. [¿Qué es Spec-Driven Design?](docs/01-que-es-sdd.md)
-2. [El flujo paso a paso](docs/02-flujo.md)
-3. [Cómo escribir una buena spec](docs/03-como-escribir-una-spec.md)
-4. [Tu primera spec, de la idea a done](docs/04-ejercicio.md)
-5. [El framework: specs + harness](docs/05-framework-y-harness.md): ciclo de vida, compuertas, roles, hooks y cómo usarlo en tu proyecto
+1. [What is Spec-Driven Design?](docs/01-what-is-sdd.md)
+2. [The flow, step by step](docs/02-flow.md)
+3. [How to write a good spec](docs/03-how-to-write-a-spec.md)
+4. [Your first spec, from idea to done](docs/04-exercise.md)
+5. [The framework: specs + harness](docs/05-framework-and-harness.md): lifecycle, gates, roles, hooks, and how to use it in your project
 
-## Estructura
+## Structure
 
 ```
-AGENTS.md              mapa para agentes (punto de entrada)
-CHECKPOINTS.md         qué significa "estado final correcto"
-harness.config.json    comandos de verificación y dónde están los tests  ← por proyecto
+AGENTS.md              map for agents (entry point)
+CHECKPOINTS.md         what "correct final state" means
+harness.config.json    verification commands and where tests live  ← per project
 harness/cli.js         new · plan · status · move · check · trace · next-ac
 harness/agents/        roles: leader, spec-writer, planner, implementer, reviewer
-templates/             plantillas de spec, plan y tareas
-specs/                 una carpeta por spec: spec.md, plan.md, tasks.md  ← fuente de verdad
-progress/              estado de la sesión, bitácora e informes de los agentes
-docs/proyecto/         arquitectura, convenciones, verificación  ← por proyecto
-.cursor/hooks*         aprobación humana + check al cerrar
+templates/             spec, plan, and task templates
+specs/                 one folder per spec: spec.md, plan.md, tasks.md  ← source of truth
+progress/              session state, log, and agent reports
+docs/project/          architecture, conventions, verification  ← per project
+.cursor/hooks*         human approval + check on close
 ```
 
-## La regla de oro
+## The golden rule
 
-**Primero cambia la spec, después el código.** Si `npm run harness -- check` está
-en rojo, el código y las specs no están alineados.
+**Change the spec first, then the code.** If `npm run harness -- check` is
+red, the code and the specs are not aligned.

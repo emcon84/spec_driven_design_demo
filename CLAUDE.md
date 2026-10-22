@@ -1,4 +1,4 @@
-# Instrucciones para Claude Code
+# Instructions for Claude Code
 
-Leé `AGENTS.md` y seguilo: es el punto de entrada común para cualquier agente en este repo.
-Para tareas de varios pasos, actuá como `leader` (`harness/agents/leader.md`).
+Read `AGENTS.md` and follow it: it is the common entry point for any agent in this repo.
+For multi-step tasks, act as `leader` (`harness/agents/leader.md`).

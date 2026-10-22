@@ -1,64 +1,64 @@
-# AGENTS.md — Mapa para agentes de IA
+# AGENTS.md — Map for AI agents
 
-> Punto de entrada para cualquier agente (Cursor, Claude Code, Codex…) que trabaje
-> en este repo. Es un **mapa**, no una biblia: leé cada archivo cuando lo necesites.
+> Entry point for any agent (Cursor, Claude Code, Codex…) working in this repo.
+> It is a **map**, not a bible: read each file when you need it.
 
-## 1. Antes de empezar (obligatorio)
+## 1. Before you start (required)
 
-1. Corré `npm run harness -- check`. Si termina en rojo, **pará** y arreglá el estado antes de tocar código.
-2. Leé `progress/current.md` para ver en qué quedó la última sesión.
-3. Corré `npm run harness -- status` para ver cada spec, su estado y el siguiente paso.
+1. Run `npm run harness -- check`. If it ends in red, **stop** and fix the state before touching code.
+2. Read `progress/current.md` to see where the last session left off.
+3. Run `npm run harness -- status` to see each spec, its status, and the next step.
 
-## 2. Cómo funciona este repo
+## 2. How this repo works
 
-Todo trabajo nace de una **spec** en `specs/NNN-nombre/spec.md`. Cada spec tiene un
-`status` en su frontmatter y avanza por este ciclo:
+All work starts from a **spec** in `specs/NNN-name/spec.md`. Each spec has a
+`status` in its frontmatter and moves through this cycle:
 
 ```
-idea → draft → approved → planned → in_progress → review → done     (blocked en cualquier momento)
+idea → draft → approved → planned → in_progress → review → done     (blocked at any time)
 ```
 
-Solo se cambia de estado con `npm run harness -- move <id> <estado>`, que se niega
-si no se cumple la compuerta (criterios, preguntas abiertas, tareas, tests, revisión).
+Status only changes with `npm run harness -- move <id> <status>`, which refuses
+if the gate is not met (criteria, open questions, tasks, tests, review).
 
-## 3. Mapa del repositorio
+## 3. Repository map
 
-| Archivo / carpeta | Qué contiene | Cuándo leerlo |
-|-------------------|--------------|---------------|
-| `specs/NNN-*/spec.md` | Qué construir y cómo se acepta (fuente de verdad) | Siempre, antes de actuar |
-| `specs/NNN-*/plan.md`, `tasks.md` | Cómo se construye y en qué pasos | Al planificar o implementar |
-| `harness/agents/` | Roles: leader, spec-writer, planner, implementer, reviewer | Al tomar un rol |
-| `docs/proyecto/arquitectura.md` | Capas y límites del proyecto | Antes de planificar o implementar |
-| `docs/proyecto/convenciones.md` | Estilo, nombres, errores, tests | Antes de escribir código |
-| `docs/proyecto/verificacion.md` | Cómo se demuestra que algo funciona | Antes de pasar a `review` |
-| `CHECKPOINTS.md` | Qué significa "estado final correcto" | Al revisar o cerrar |
-| `progress/current.md` | Estado vivo de la sesión | Siempre, y actualizarlo mientras trabajás |
-| `progress/history.md` | Bitácora append-only | Si necesitás contexto histórico |
-| `templates/` | Plantillas de spec, plan y tareas | Las usa el harness |
-| `harness.config.json` | Comandos de verificación y dónde están los tests | Si cambia el stack |
+| File / folder | What it contains | When to read it |
+|---------------|------------------|-----------------|
+| `specs/NNN-*/spec.md` | What to build and how it is accepted (source of truth) | Always, before acting |
+| `specs/NNN-*/plan.md`, `tasks.md` | How it is built and in which steps | When planning or implementing |
+| `harness/agents/` | Roles: leader, spec-writer, planner, implementer, reviewer | When taking a role |
+| `docs/project/architecture.md` | Layers and boundaries of the project | Before planning or implementing |
+| `docs/project/conventions.md` | Style, names, errors, tests | Before writing code |
+| `docs/project/verification.md` | How you prove that something works | Before moving to `review` |
+| `CHECKPOINTS.md` | What "correct final state" means | When reviewing or closing |
+| `progress/current.md` | Live session state | Always, and update it while you work |
+| `progress/history.md` | Append-only log | If you need historical context |
+| `templates/` | Spec, plan, and task templates | Used by the harness |
+| `harness.config.json` | Verification commands and where tests live | If the stack changes |
 
-## 4. Qué rol tomar
+## 4. Which role to take
 
-| Situación (`harness status`) | Rol | Archivo |
-|------------------------------|-----|---------|
-| El usuario trae una idea nueva | spec-writer | `harness/agents/spec-writer.md` |
-| Spec en `idea` o `draft` | spec-writer | `harness/agents/spec-writer.md` |
-| Spec en `approved` | planner | `harness/agents/planner.md` |
-| Spec en `planned` / `in_progress` | implementer | `harness/agents/implementer.md` |
-| Spec en `review` | reviewer | `harness/agents/reviewer.md` |
-| Tarea grande o varios pasos | leader (orquesta los anteriores) | `harness/agents/leader.md` |
+| Situation (`harness status`) | Role | File |
+|------------------------------|------|------|
+| The user brings a new idea | spec-writer | `harness/agents/spec-writer.md` |
+| Spec in `idea` or `draft` | spec-writer | `harness/agents/spec-writer.md` |
+| Spec in `approved` | planner | `harness/agents/planner.md` |
+| Spec in `planned` / `in_progress` | implementer | `harness/agents/implementer.md` |
+| Spec in `review` | reviewer | `harness/agents/reviewer.md` |
+| Large task or several steps | leader (orchestrates the others) | `harness/agents/leader.md` |
 
-## 5. Reglas duras
+## 5. Hard rules
 
-- **La spec manda.** Si el código necesita algo que la spec no dice, se para y se actualiza la spec (vuelve a `draft`).
-- **Nunca apruebes una spec.** `move <id> approved --by <nombre>` lo ejecuta un humano.
-- **Una spec en `in_progress` a la vez.** El harness lo impone.
-- **No marques `done` sin evidencia**: tests verdes y `progress/review_<id>.md` con `APPROVED`.
-- **Estado en disco, no en el chat.** Los subagentes escriben sus informes en `progress/` y devuelven solo `done -> <archivo>` o `blocked -> <archivo>`.
-- **No inventes workarounds.** Si algo no funciona como esperás, anotalo en `progress/current.md` y pasá la spec a `blocked`.
+- **The spec is in charge.** If the code needs something the spec does not say, stop and update the spec (it goes back to `draft`).
+- **Never approve a spec.** `move <id> approved --by <name>` is executed by a human.
+- **One spec in `in_progress` at a time.** The harness enforces this.
+- **Do not mark `done` without evidence**: green tests and `progress/review_<id>.md` with `APPROVED`.
+- **State lives on disk, not in chat.** Subagents write their reports in `progress/` and reply only `done -> <file>` or `blocked -> <file>`.
+- **Do not invent workarounds.** If something does not work as you expect, note it in `progress/current.md` and move the spec to `blocked`.
 
-## 6. Cierre de sesión
+## 6. Session close
 
-1. `npm run harness -- check` en verde.
-2. Mové el resumen de `progress/current.md` al final de `progress/history.md` y dejá `current.md` como la plantilla vacía.
-3. Sin archivos temporales, `console.log` de debug ni TODOs sin contexto.
+1. `npm run harness -- check` is green.
+2. Move the summary from `progress/current.md` to the end of `progress/history.md` and leave `current.md` as the empty template.
+3. No temporary files, debug `console.log`s, or TODOs without context.

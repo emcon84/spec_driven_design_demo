@@ -7,50 +7,50 @@ approved_by:
 ---
 # Spec {{id}} — {{title}}
 
-## 0. Idea original
+## 0. Original idea
 
 > {{idea}}
 
-<!-- La idea tal como llegó. No se edita: sirve para comparar contra lo que terminó siendo la spec. -->
+<!-- The idea as it arrived. Do not edit it: it is used to compare against what the spec became. -->
 
-## 1. Problema
+## 1. Problem
 
-<!-- ¿Qué le duele a quién? Sin mencionar la solución. -->
+<!-- What hurts, and for whom? Do not mention the solution. -->
 
-## 2. Objetivos
-
-- 
-
-## 3. Fuera de alcance (No-objetivos)
+## 2. Goals
 
 - 
 
-## 4. Glosario
+## 3. Out of scope (Non-goals)
 
-- **Término**: definición.
+- 
 
-## 5. Reglas de negocio
+## 4. Glossary
+
+- **Term**: definition.
+
+## 5. Business rules
 
 - **R1** — 
 
-## 6. Contrato
+## 6. Contract
 
-<!-- Endpoints, requests, responses, errores. O pantallas y estados si es UI. O comandos y salidas si es CLI. -->
+<!-- Endpoints, requests, responses, errors. Or screens and states if this is UI. Or commands and outputs if this is a CLI. -->
 
-## 7. Criterios de aceptación
+## 7. Acceptance criteria
 
-<!-- Reemplazá X por el siguiente número libre (`npm run harness -- next-ac`). Los IDs son globales y no se reutilizan.
-     Formato: Dado <contexto>, cuando <acción>, entonces <resultado observable>. -->
+<!-- Replace X with the next free number (`npm run harness -- next-ac`). IDs are global and are not reused.
+     Format: Given <context>, when <action>, then <observable result>. -->
 
-- **AC-X** — Dado ..., cuando ..., entonces ...
+- **AC-X** — Given ..., when ..., then ...
 
-## 8. Preguntas abiertas
+## 8. Open questions
 
-<!-- Una por línea con "- [ ]". Al resolverla, marcala "- [x]" y anotá la decisión en la sección 9.
-     La spec no se puede aprobar con preguntas "- [ ]" pendientes. -->
+<!-- One per line with "- [ ]". When you resolve it, mark it "- [x]" and record the decision in section 9.
+     The spec cannot be approved with pending "- [ ]" questions. -->
 
 - [ ] 
 
-## 9. Decisiones tomadas durante la revisión
+## 9. Decisions made during review
 
 - 

@@ -1,27 +1,27 @@
-# Plan técnico — Spec {{id}}: {{title}}
+# Technical plan — Spec {{id}}: {{title}}
 
-> La spec dice **qué** y **por qué**. Este plan dice **cómo**. Si el plan
-> contradice a la spec, gana la spec (o se actualiza la spec primero).
-> Respetá `docs/proyecto/arquitectura.md` y `docs/proyecto/convenciones.md`.
+> The spec says **what** and **why**. This plan says **how**. If the plan
+> contradicts the spec, the spec wins (or the spec is updated first).
+> Follow `docs/project/architecture.md` and `docs/project/conventions.md`.
 
 ## Stack
 
 - 
 
-## Arquitectura
+## Architecture
 
-<!-- Componentes, responsabilidades y cómo se conectan. Un diagrama ayuda. -->
+<!-- Components, responsibilities, and how they connect. A diagram helps. -->
 
-## Decisiones de diseño
+## Design decisions
 
-| Decisión | Motivo (AC o regla que la justifica) |
-|----------|--------------------------------------|
-|          |                                      |
+| Decision | Reason (AC or rule that justifies it) |
+|----------|---------------------------------------|
+|          |                                       |
 
-## Cambios en código existente
+## Changes to existing code
 
 - 
 
-## Riesgos
+## Risks
 
 - 

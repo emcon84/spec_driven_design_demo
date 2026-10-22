@@ -49,7 +49,7 @@ function context() {
 
 function findSpec(specs, id) {
   const spec = specs.find((s) => s.id === String(id).padStart(3, '0') || s.name === id);
-  if (!spec) die(`no existe la spec "${id}". Specs: ${specs.map((s) => s.id).join(', ') || '(ninguna)'}`);
+  if (!spec) die(`spec "${id}" does not exist. Specs: ${specs.map((s) => s.id).join(', ') || '(none)'}`);
   return spec;
 }
 
@@ -67,7 +67,7 @@ function slugify(text) {
 
 function runVerify(config, { verbose = false } = {}) {
   if (!config.verify?.length) {
-    warn('no hay comandos en harness.config.json → verify (agregá tests/lint cuando exista código)');
+    warn('no commands in harness.config.json → verify (add tests/lint once there is code)');
     return true;
   }
   let allPassed = true;
@@ -86,11 +86,11 @@ function runVerify(config, { verbose = false } = {}) {
   return allPassed;
 }
 
-// ── Comandos ────────────────────────────────────────────────────────────────
+// ── Commands ────────────────────────────────────────────────────────────────
 
 function cmdNew({ positional, flags }) {
   const idea = positional.join(' ').trim();
-  if (!idea) die('uso: harness new "<idea en una o dos frases>" [--title "Título"]');
+  if (!idea) die('usage: harness new "<idea in one or two sentences>" [--title "Title"]');
 
   const { config, specs } = context();
   const title = typeof flags.title === 'string' ? flags.title : idea.split(/[.\n]/)[0].slice(0, 60);
@@ -102,9 +102,9 @@ function cmdNew({ positional, flags }) {
     id, title, idea, date: new Date().toISOString().slice(0, 10),
   }));
 
-  console.log(`${green('✔')} Creada ${join(dir, 'spec.md')} (status: idea)`);
-  console.log(`  Primer ID de criterio libre: AC-${nextAcNumber(specs)}`);
-  console.log(`  Próximo paso: spec-writer (harness/agents/spec-writer.md) → draft`);
+  console.log(`${green('✔')} Created ${join(dir, 'spec.md')} (status: idea)`);
+  console.log(`  First free criterion ID: AC-${nextAcNumber(specs)}`);
+  console.log(`  Next step: spec-writer (harness/agents/spec-writer.md) → draft`);
 }
 
 function cmdPlan({ positional }) {
@@ -114,59 +114,59 @@ function cmdPlan({ positional }) {
   for (const file of ['plan.md', 'tasks.md']) {
     const target = join(spec.dir, file);
     if (existsSync(target)) {
-      console.log(`${yellow('·')} ${target} ya existe, no se toca`);
+      console.log(`${yellow('·')} ${target} already exists, leaving it unchanged`);
     } else {
       writeFileSync(target, fillTemplate(join(config.templatesDir, file), values));
-      console.log(`${green('✔')} Creado ${target}`);
+      console.log(`${green('✔')} Created ${target}`);
     }
   }
 }
 
 function cmdStatus() {
   const { specs, testRefs, progressDir } = context();
-  if (specs.length === 0) return console.log('No hay specs. Empezá con: harness new "<idea>"');
+  if (specs.length === 0) return console.log('No specs. Start with: harness new "<idea>"');
 
   console.log('');
   for (const spec of specs) {
     const tested = spec.acs.filter((ac) => testRefs.has(ac)).length;
     const done = spec.tasks.filter((t) => t.done).length;
     console.log(`${spec.id}  ${spec.title}`);
-    console.log(dim(`     estado: ${spec.status}   ACs con test: ${tested}/${spec.acs.length}   tareas: ${done}/${spec.tasks.length}`));
-    console.log(`     siguiente → ${nextAction(spec, progressDir).replace('<id>', spec.id)}\n`);
+    console.log(dim(`     status: ${spec.status}   ACs with tests: ${tested}/${spec.acs.length}   tasks: ${done}/${spec.tasks.length}`));
+    console.log(`     next → ${nextAction(spec, progressDir).replace('<id>', spec.id)}\n`);
   }
-  console.log(dim(`Próximo ID de criterio libre: AC-${nextAcNumber(specs)}`));
+  console.log(dim(`Next free criterion ID: AC-${nextAcNumber(specs)}`));
 }
 
 function cmdMove({ positional, flags }) {
   const [id, target] = positional;
-  if (!id || !target) die(`uso: harness move <id> <${[...STATUSES, BLOCKED].join('|')}> [--by <nombre>] [--reason "<motivo>"]`);
-  if (![...STATUSES, BLOCKED].includes(target)) die(`estado inválido "${target}"`);
+  if (!id || !target) die(`usage: harness move <id> <${[...STATUSES, BLOCKED].join('|')}> [--by <name>] [--reason "<reason>"]`);
+  if (![...STATUSES, BLOCKED].includes(target)) die(`invalid status "${target}"`);
 
   const ctx = context();
   const spec = findSpec(ctx.specs, id);
   if (!canTransition(spec.status, target)) {
-    die(`no se puede saltar de ${spec.status} a ${target}. Siguiente estado posible: ${STATUSES[STATUSES.indexOf(spec.status) + 1]}`);
+    die(`cannot jump from ${spec.status} to ${target}. Next possible status: ${STATUSES[STATUSES.indexOf(spec.status) + 1]}`);
   }
 
   const fields = { status: target };
   if (target === 'approved') {
-    if (typeof flags.by !== 'string') die('aprobar una spec requiere --by <nombre> (lo hace un humano, no un agente)');
+    if (typeof flags.by !== 'string') die('approving a spec requires --by <name> (a human does this, not an agent)');
     fields.approved_by = flags.by;
   } else if (target !== BLOCKED && STATUSES.indexOf(target) < STATUSES.indexOf('approved')) {
     fields.approved_by = '';
   }
-  fields.blocked_reason = target === BLOCKED ? (typeof flags.reason === 'string' ? flags.reason : 'sin motivo') : '';
+  fields.blocked_reason = target === BLOCKED ? (typeof flags.reason === 'string' ? flags.reason : 'no reason given') : '';
 
   const candidate = { ...spec, status: target, approvedBy: fields.approved_by ?? spec.approvedBy };
   const problems = gateProblems(candidate, target, ctx);
 
   if (['review', 'done'].includes(target) && problems.length === 0) {
-    heading('Verificación');
-    if (!runVerify(ctx.config)) problems.push('la verificación falla (ver arriba)');
+    heading('Verification');
+    if (!runVerify(ctx.config)) problems.push('verification failed (see above)');
   }
 
   if (problems.length > 0) {
-    console.log(red(`\n✘ ${spec.id}: ${spec.status} → ${target} rechazado por la compuerta:`));
+    console.log(red(`\n✘ ${spec.id}: ${spec.status} → ${target} rejected by the gate:`));
     for (const problem of problems) console.log(`   - ${problem}`);
     process.exit(1);
   }
@@ -174,7 +174,7 @@ function cmdMove({ positional, flags }) {
   const cleaned = Object.fromEntries(Object.entries(fields).filter(([k, v]) => v !== '' || spec.frontmatter[k] !== undefined));
   writeFileSync(spec.specPath, withFrontmatter(spec.text, cleaned));
   console.log(`${green('✔')} ${spec.id}: ${spec.status} → ${target}`);
-  console.log(`  siguiente → ${nextAction(candidate, ctx.progressDir).replace('<id>', spec.id)}`);
+  console.log(`  next → ${nextAction(candidate, ctx.progressDir).replace('<id>', spec.id)}`);
 }
 
 function traceReport({ specs, testRefs }) {
@@ -182,7 +182,7 @@ function traceReport({ specs, testRefs }) {
   const owner = new Map();
   for (const spec of specs) {
     for (const ac of spec.acs) {
-      if (owner.has(ac)) errors.push(`${ac} está definido en ${owner.get(ac)} y en ${spec.id}`);
+      if (owner.has(ac)) errors.push(`${ac} is defined in ${owner.get(ac)} and in ${spec.id}`);
       owner.set(ac, spec.id);
     }
   }
@@ -193,24 +193,24 @@ function traceReport({ specs, testRefs }) {
     for (const ac of [...spec.acs].sort((a, b) => acNumber(a) - acNumber(b))) {
       const files = testRefs.get(ac);
       if (files) console.log(`    ${green('✔')} ${ac}  ${dim([...files].join(', '))}`);
-      else if (mustBeTested) { console.log(`    ${red('✘')} ${ac}  SIN TESTS`); errors.push(`${ac} (${spec.id}) no tiene tests`); }
-      else console.log(`    ${yellow('○')} ${ac}  pendiente`);
+      else if (mustBeTested) { console.log(`    ${red('✘')} ${ac}  NO TESTS`); errors.push(`${ac} (${spec.id}) has no tests`); }
+      else console.log(`    ${yellow('○')} ${ac}  pending`);
     }
   }
 
   for (const [ac, files] of testRefs) {
-    if (!owner.has(ac)) errors.push(`${ac} se usa en ${[...files].join(', ')} pero no existe en ninguna spec`);
+    if (!owner.has(ac)) errors.push(`${ac} is used in ${[...files].join(', ')} but does not exist in any spec`);
   }
   return errors;
 }
 
 function cmdTrace() {
   const ctx = context();
-  console.log('Trazabilidad spec → tests');
+  console.log('Traceability spec → tests');
   const errors = traceReport(ctx);
   console.log('');
   errors.forEach(fail);
-  if (errors.length === 0) ok('trazabilidad consistente');
+  if (errors.length === 0) ok('traceability is consistent');
   process.exit(errors.length ? 1 : 0);
 }
 
@@ -219,39 +219,39 @@ function cmdCheck({ flags }) {
   const { config, specs } = ctx;
   let healthy = true;
 
-  heading('1. Archivos base del harness');
+  heading('1. Harness base files');
   for (const file of config.requiredFiles) {
     if (existsSync(file)) ok(file);
-    else { fail(`falta ${file}`); healthy = false; }
+    else { fail(`missing ${file}`); healthy = false; }
   }
 
-  heading('2. Estado de las specs');
-  if (specs.length === 0) warn('no hay specs todavía');
+  heading('2. Spec status');
+  if (specs.length === 0) warn('no specs yet');
   for (const spec of specs) {
     const problems = gateProblems(spec, spec.status, ctx);
     if (problems.length === 0) ok(`${spec.id} ${spec.title} [${spec.status}]`);
     else {
-      fail(`${spec.id} ${spec.title} [${spec.status}] no cumple su estado:`);
+      fail(`${spec.id} ${spec.title} [${spec.status}] does not satisfy its status:`);
       problems.forEach((p) => console.log(`         - ${p}`));
       healthy = false;
     }
   }
 
-  heading('3. Trazabilidad spec → tests');
+  heading('3. Traceability spec → tests');
   const traceErrors = traceReport(ctx);
   console.log('');
   traceErrors.forEach(fail);
-  if (traceErrors.length === 0) ok('trazabilidad consistente');
+  if (traceErrors.length === 0) ok('traceability is consistent');
   else healthy = false;
 
   if (!flags.fast) {
-    heading('4. Verificación ejecutable');
+    heading('4. Executable verification');
     if (!runVerify(config, { verbose: Boolean(flags.verbose) })) healthy = false;
   }
 
-  heading('Resumen');
-  if (healthy) ok('Harness en verde. Se puede trabajar / cerrar la sesión.');
-  else fail('Harness en rojo. Resolvé lo de arriba (o documentá el bloqueo en progress/current.md).');
+  heading('Summary');
+  if (healthy) ok('Harness is green. You can work / close the session.');
+  else fail('Harness is red. Fix the issues above (or document the block in progress/current.md).');
   process.exit(healthy ? 0 : 1);
 }
 
@@ -260,20 +260,20 @@ function cmdNextAc() {
 }
 
 const COMMANDS = {
-  new: [cmdNew, 'new "<idea>" [--title "..."]', 'crea specs/NNN-slug/spec.md en estado idea'],
-  plan: [cmdPlan, 'plan <id>', 'crea plan.md y tasks.md desde las plantillas'],
-  status: [cmdStatus, 'status', 'estado de cada spec y el siguiente paso'],
-  move: [cmdMove, 'move <id> <estado> [--by <nombre>]', 'cambia de estado si pasa la compuerta'],
-  check: [cmdCheck, 'check [--fast] [--verbose]', 'verificación completa (usar al empezar y al cerrar)'],
-  trace: [cmdTrace, 'trace', 'solo trazabilidad AC ↔ tests'],
-  'next-ac': [cmdNextAc, 'next-ac', 'próximo ID de criterio libre'],
+  new: [cmdNew, 'new "<idea>" [--title "..."]', 'creates specs/NNN-slug/spec.md in idea status'],
+  plan: [cmdPlan, 'plan <id>', 'creates plan.md and tasks.md from the templates'],
+  status: [cmdStatus, 'status', 'status of each spec and the next step'],
+  move: [cmdMove, 'move <id> <status> [--by <name>]', 'changes status if the gate passes'],
+  check: [cmdCheck, 'check [--fast] [--verbose]', 'full verification (use at start and close)'],
+  trace: [cmdTrace, 'trace', 'AC ↔ tests traceability only'],
+  'next-ac': [cmdNextAc, 'next-ac', 'next free criterion ID'],
 };
 
 const [command, ...rest] = process.argv.slice(2);
 if (!COMMANDS[command]) {
-  console.log('harness — Spec-Driven Design harness\n\nComandos:');
+  console.log('harness — Spec-Driven Design harness\n\nCommands:');
   for (const [, usage, description] of Object.values(COMMANDS)) console.log(`  ${usage.padEnd(40)} ${dim(description)}`);
-  console.log(`\nCiclo de vida: ${STATUSES.join(' → ')}  (y ${BLOCKED} en cualquier momento)`);
+  console.log(`\nLifecycle: ${STATUSES.join(' → ')}  (and ${BLOCKED} at any time)`);
   process.exit(command ? 1 : 0);
 }
 COMMANDS[command][0](parseArgs(rest));

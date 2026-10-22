@@ -1,6 +1,6 @@
 #!/bin/bash
-# Al terminar el agente, corre el harness. Si está en rojo, le devuelve el
-# resumen como follow-up para que lo arregle o documente el bloqueo.
+# When the agent finishes, run the harness. If it is red, return the
+# summary as a follow-up so it can fix it or document the block.
 cat >/dev/null
 cd "$(dirname "$0")/../.." || { echo '{}'; exit 0; }
 
@@ -14,5 +14,5 @@ fi
 
 HARNESS_OUTPUT=$(printf '%s' "$output" | grep -E '\[FAIL\]|^[[:space:]]+- ' | head -20) \
   "$NODE" -e 'process.stdout.write(JSON.stringify({
-    followup_message: "El harness está en rojo (`npm run harness -- check`). Arreglalo o, si estás bloqueado, documentalo en progress/current.md y pasá la spec a blocked:\n" + process.env.HARNESS_OUTPUT
+    followup_message: "The harness is red (`npm run harness -- check`). Fix it or, if you are blocked, document it in progress/current.md and move the spec to blocked:\n" + process.env.HARNESS_OUTPUT
   }))'

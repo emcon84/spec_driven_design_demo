@@ -1,20 +1,20 @@
-# Sesión actual
+# Current session
 
-> Se vacía al cerrar cada sesión (el resumen pasa a `history.md`).
-> Mantenelo actualizado **mientras** trabajás, no al final.
+> Cleared when each session closes (the summary moves to `history.md`).
+> Keep this updated **while** you work, not at the end.
 
-- **Spec en curso:** _ninguna_
-- **Rol:** _—_
-- **Inicio:** _—_
+- **Spec in progress:** _none_
+- **Role:** _—_
+- **Started:** _—_
 
 ## Plan
 
-_3–5 bullets antes de tocar nada._
+_3–5 bullets before touching anything._
 
-## Bitácora
+## Log
 
 - ...
 
-## Próximo paso
+## Next step
 
-_Si la sesión se corta, lo primero que tiene que hacer la siguiente._
+_If the session is cut off, the first thing the next one has to do._

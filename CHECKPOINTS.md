@@ -1,44 +1,44 @@
-# CHECKPOINTS — Qué significa "estado final correcto"
+# CHECKPOINTS — What "correct final state" means
 
-> No se evalúa el camino, se evalúa el destino. Lo marcado con ⚙️ lo verifica
-> `npm run harness -- check` automáticamente; lo marcado con 👀 lo juzga el
-> reviewer (o un humano) leyendo.
+> The path is not evaluated; the destination is. Items marked ⚙️ are verified
+> automatically by `npm run harness -- check`; items marked 👀 are judged by
+> the reviewer (or a human) by reading.
 
-## C1 — El harness está completo
+## C1 — The harness is complete
 
-- [ ] ⚙️ Existen los archivos listados en `harness.config.json → requiredFiles`.
-- [ ] ⚙️ `npm run harness -- check` termina con exit code 0.
+- [ ] ⚙️ The files listed in `harness.config.json → requiredFiles` exist.
+- [ ] ⚙️ `npm run harness -- check` exits with code 0.
 
-## C2 — El estado de las specs es coherente
+## C2 — Spec state is coherent
 
-- [ ] ⚙️ Toda spec tiene frontmatter con `status` válido y cumple la compuerta de su estado.
-- [ ] ⚙️ Como mucho una spec en `in_progress`.
-- [ ] ⚙️ Ninguna spec `approved` o posterior tiene preguntas abiertas sin resolver.
-- [ ] ⚙️ Toda spec `approved` o posterior tiene `approved_by` (un humano).
-- [ ] 👀 El `approved_by` corresponde a una persona real, no a un agente.
+- [ ] ⚙️ Every spec has frontmatter with a valid `status` and satisfies the gate for that status.
+- [ ] ⚙️ At most one spec in `in_progress`.
+- [ ] ⚙️ No spec in `approved` or later has unresolved open questions.
+- [ ] ⚙️ Every spec in `approved` or later has `approved_by` (a human).
+- [ ] 👀 `approved_by` corresponds to a real person, not an agent.
 
-## C3 — La implementación respeta la spec
+## C3 — The implementation respects the spec
 
-- [ ] ⚙️ Todo AC de una spec `review`/`done` tiene al menos un test `[AC-n]`.
-- [ ] ⚙️ Ningún test referencia un AC inexistente, y ningún AC está duplicado entre specs.
-- [ ] 👀 Cada test prueba **lo que dice su AC**, no algo parecido (status, códigos de error, campos).
-- [ ] 👀 No hay comportamiento nuevo que la spec no pida (scope creep).
-- [ ] 👀 Lo que está en "Fuera de alcance" no se implementó.
+- [ ] ⚙️ Every AC of a spec in `review`/`done` has at least one `[AC-n]` test.
+- [ ] ⚙️ No test references a nonexistent AC, and no AC is duplicated across specs.
+- [ ] 👀 Each test proves **what its AC says**, not something similar (status, error codes, fields).
+- [ ] 👀 There is no new behavior the spec does not ask for (scope creep).
+- [ ] 👀 Nothing listed under "Out of scope" was implemented.
 
-## C4 — El código respeta el proyecto
+## C4 — The code respects the project
 
-- [ ] 👀 Respeta las capas de `docs/proyecto/arquitectura.md`.
-- [ ] 👀 Respeta `docs/proyecto/convenciones.md`.
-- [ ] ⚙️ Los comandos de `harness.config.json → verify` pasan.
+- [ ] 👀 Respects the layers in `docs/project/architecture.md`.
+- [ ] 👀 Respects `docs/project/conventions.md`.
+- [ ] ⚙️ The commands in `harness.config.json → verify` pass.
 
-## C5 — La sesión se cerró bien
+## C5 — The session closed cleanly
 
-- [ ] 👀 `progress/current.md` está vacío (plantilla) o describe la sesión activa.
-- [ ] 👀 `progress/history.md` tiene una entrada por la última sesión.
-- [ ] 👀 No hay archivos temporales, logs de debug ni TODOs sin contexto.
+- [ ] 👀 `progress/current.md` is empty (template) or describes the active session.
+- [ ] 👀 `progress/history.md` has an entry for the last session.
+- [ ] 👀 There are no temporary files, debug logs, or TODOs without context.
 
 ---
 
-**Cómo se usa:** el reviewer (`harness/agents/reviewer.md`) recorre cada checkbox en
-`progress/review_<id>.md`, marca `[x]` o `[ ]` con el motivo, y solo emite
-`APPROVED` si no queda ninguno vacío.
+**How it is used:** the reviewer (`harness/agents/reviewer.md`) walks each checkbox in
+`progress/review_<id>.md`, marks `[x]` or `[ ]` with the reason, and only emits
+`APPROVED` if none are left empty.

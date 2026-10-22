@@ -1,5 +1,5 @@
 {
-  "project": "mi-proyecto",
+  "project": "my-project",
   "specsDir": "specs",
   "templatesDir": "templates",
   "progressDir": "progress",
@@ -14,8 +14,8 @@
     "harness.config.json",
     "progress/current.md",
     "progress/history.md",
-    "docs/proyecto/arquitectura.md",
-    "docs/proyecto/convenciones.md",
-    "docs/proyecto/verificacion.md"
+    "docs/project/architecture.md",
+    "docs/project/conventions.md",
+    "docs/project/verification.md"
   ]
 }
